@@ -15,13 +15,14 @@ fn main() {
 
     loop {
         let guess = ask_for_guess(min, max);
-        match check_answer(answer, guess) {
-            Result::Ok(_) => {
+        return match guess.cmp(&answer) {
+            Ordering::Less => println!("Too low."),
+            Ordering::Greater => println!("Too high."),
+            Ordering::Equal => {
                 println!("You Win!");
                 break;
             },
-            Result::Err(err) => println!("Nope: {}", err),
-        }
+        };
     }
 
     println!("The answer was: {}", answer);
@@ -44,12 +45,4 @@ fn ask_for_guess(min: i32, max: i32) -> i32 {
 
     let guess: i32 = guess.trim().parse().expect("Not a number");
     return guess;
-}
-
-fn check_answer(answer: i32, guess: i32) -> Result<(), String> {
-    return match guess.cmp(&answer) {
-        Ordering::Less => Result::Err("Too low.".to_string()),
-        Ordering::Greater => Result::Err("Too high.".to_string()),
-        Ordering::Equal => Result::Ok(()),
-    };
 }
