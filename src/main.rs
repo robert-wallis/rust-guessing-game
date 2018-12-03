@@ -8,21 +8,32 @@ use std::io::Write;
 fn main() {
     println!("Guessing Game");
 
-    let min = 1;
-    let max = 100;
+    let mut min = 1;
+    let mut max = 100;
 
     let answer = gen_answer(min, max);
 
     loop {
         let guess = ask_for_guess(min, max);
-        return match guess.cmp(&answer) {
-            Ordering::Less => println!("Too low."),
-            Ordering::Greater => println!("Too high."),
-            Ordering::Equal => {
-                println!("You Win!");
-                break;
-            },
-        };
+        match guess {
+            Ok(guess) => {
+                match guess.cmp(&answer) {
+                    Ordering::Less => {
+                        println!("Too low.");
+                        min = guess + 1;
+                    }
+                    Ordering::Greater => {
+                        println!("Too high.");
+                        max = guess - 1;
+                    }
+                    Ordering::Equal => {
+                        println!("You Win!");
+                        break;
+                    }
+                };
+            }
+            Err(err) => println!("{}", err),
+        }
     }
 
     println!("The answer was: {}", answer);
@@ -34,15 +45,21 @@ fn gen_answer(min: i32, max: i32) -> i32 {
     return random.gen_range(min, max + 1);
 }
 
-fn ask_for_guess(min: i32, max: i32) -> i32 {
+fn ask_for_guess(min: i32, max: i32) -> Result<i32, String> {
     print!("Guess a number between {}, and {}: ", min, max);
-    io::stdout().flush().expect("stdout can't flush");
+    match io::stdout().flush() {
+        Ok(_) => (),
+        Err(err) => return Err(err.to_string()),
+    }
 
     let mut guess = String::new();
-    io::stdin()
-        .read_line(&mut guess)
-        .expect("Read Line Failed :/");
+    match io::stdin().read_line(&mut guess) {
+        Ok(_) => (),
+        Err(err) => return Err(err.to_string()),
+    }
 
-    let guess: i32 = guess.trim().parse().expect("Not a number");
-    return guess;
+    return match guess.trim().parse() {
+        Ok(num) => Ok(num),
+        Err(err) => Err(err.to_string()),
+    };
 }
