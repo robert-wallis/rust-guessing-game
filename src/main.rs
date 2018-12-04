@@ -1,3 +1,6 @@
+// Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
+// My version of Guessing Game: https://doc.rust-lang.org/book/2018-edition/ch02-00-guessing-game-tutorial.html
+
 extern crate rand;
 
 use rand::Rng;
@@ -5,26 +8,44 @@ use std::cmp::Ordering;
 use std::io;
 use std::io::Write;
 
+struct Stats {
+    turns: i32,
+}
+
+struct GameState {
+    min: i32,
+    max: i32,
+    answer: i32,
+    stats: Stats,
+}
+
 fn main() {
     println!("Guessing Game");
 
-    let mut min = 1;
-    let mut max = 100;
+    let mut game_state = GameState {
+        min: 1,
+        max: 100,
+        answer: 0,
+        stats: Stats {
+            turns: 0
+        },
+    };
 
-    let answer = gen_answer(min, max);
+    game_state.answer = gen_answer(game_state.min, game_state.max);
 
     loop {
-        let guess = ask_for_guess(min, max);
+        game_state.stats.turns += 1;
+        let guess = ask_for_guess(game_state.min, game_state.max);
         match guess {
             Ok(guess) => {
-                match guess.cmp(&answer) {
+                match guess.cmp(&game_state.answer) {
                     Ordering::Less => {
                         println!("Too low.");
-                        min = guess + 1;
+                        game_state.min = guess + 1;
                     }
                     Ordering::Greater => {
                         println!("Too high.");
-                        max = guess - 1;
+                        game_state.max = guess - 1;
                     }
                     Ordering::Equal => {
                         println!("You Win!");
@@ -36,7 +57,7 @@ fn main() {
         }
     }
 
-    println!("The answer was: {}", answer);
+    println!("The answer was: {}, you got it in {} turns.", game_state.answer, game_state.stats.turns);
 }
 
 /// Generate a number between min and max inclusive [min, max].
