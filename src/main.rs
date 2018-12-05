@@ -34,6 +34,7 @@ enum AskGuessError {
 trait Guesser {
     fn guess(&self, range: &Range) -> Result<i32, AskGuessError>;
 }
+
 trait Displayer {
     fn display_guess_error(&self, err: &AskGuessError);
     fn display_guess_result(&self, result: &GuessResult);
