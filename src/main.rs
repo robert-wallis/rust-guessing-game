@@ -5,6 +5,8 @@ extern crate rand;
 
 use rand::Rng;
 use std::cmp::Ordering;
+use std::convert::From;
+use std::fmt;
 use std::io;
 use std::io::Write;
 
@@ -19,6 +21,26 @@ struct GameState {
     stats: Stats,
 }
 
+enum AskGuessError {
+    IOError(io::Error),
+    NotANumber,
+}
+
+impl From<io::Error> for AskGuessError {
+    fn from(err: io::Error) -> AskGuessError {
+        AskGuessError::IOError(err)
+    }
+}
+
+impl fmt::Display for AskGuessError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AskGuessError::IOError(err) => write!(f, "IO Error: {}", err),
+            AskGuessError::NotANumber => write!(f, "Not a valid number."),
+        }
+    }
+}
+
 fn main() {
     println!("Guessing Game");
 
@@ -26,9 +48,7 @@ fn main() {
         min: 1,
         max: 100,
         answer: 0,
-        stats: Stats {
-            turns: 0
-        },
+        stats: Stats { turns: 0 },
     };
 
     game_state.answer = gen_answer(game_state.min, game_state.max);
@@ -57,30 +77,27 @@ fn main() {
         }
     }
 
-    println!("The answer was: {}, you got it in {} turns.", game_state.answer, game_state.stats.turns);
+    println!(
+        "The answer was: {}, you got it in {} turns.",
+        game_state.answer, game_state.stats.turns
+    );
 }
 
 /// Generate a number between min and max inclusive [min, max].
 fn gen_answer(min: i32, max: i32) -> i32 {
     let mut random = rand::thread_rng();
-    return random.gen_range(min, max + 1);
+    random.gen_range(min, max + 1)
 }
 
-fn ask_for_guess(min: i32, max: i32) -> Result<i32, String> {
+fn ask_for_guess(min: i32, max: i32) -> Result<i32, AskGuessError> {
     print!("Guess a number between {}, and {}: ", min, max);
-    match io::stdout().flush() {
-        Ok(_) => (),
-        Err(err) => return Err(err.to_string()),
-    }
+    io::stdout().flush()?;
 
     let mut guess = String::new();
-    match io::stdin().read_line(&mut guess) {
-        Ok(_) => (),
-        Err(err) => return Err(err.to_string()),
-    }
+    io::stdin().read_line(&mut guess)?;
 
-    return match guess.trim().parse() {
+    match guess.trim().parse() {
         Ok(num) => Ok(num),
-        Err(err) => Err(err.to_string()),
-    };
+        Err(_) => Err(AskGuessError::NotANumber),
+    }
 }
