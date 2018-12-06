@@ -4,9 +4,9 @@
 extern crate rand;
 
 mod guesser;
-use guesser::{GuessResult, Guesser, io::IOGuesser, half::HalfGuesser};
+use guesser::{ GuessResult, Guesser, io::IOGuesser, half::HalfGuesser };
 mod displayer;
-use displayer::{Displayer, io::IODisplayer};
+use displayer::{ Displayer, io::IODisplayer, aggregator::Aggregator };
 mod range;
 use range::Range;
 mod stats;
@@ -42,16 +42,20 @@ fn main() {
     println!("==== Guessing Game ====");
 
     let _io_guesser = IOGuesser;
-    let io_displayer = IODisplayer;
+    let mut _io_displayer = IODisplayer;
+    let mut aggregator = Aggregator::new();
     let half = HalfGuesser;
 
-    //gameloop(Range { min: 1, max: 100 }, &half, &io_displayer);
-    gameloop(Range { min: 1, max: 100 }, &half, &io_displayer);
+    //gameloop(Range { min: 1, max: 100 }, &half, &mut io_displayer);
+    for _ in 0..1_000_000 {
+        gameloop(Range { min: 1, max: 100 }, &half, &mut aggregator);
+    }
 
+    println!("min turns: {}\nmax turns: {}\naverage turns: {}\ngames played: {}", aggregator.least_turns, aggregator.most_turns, aggregator.average_turns, aggregator.games_played);
     println!("End Game");
 }
 
-fn gameloop(range: Range, guesser: &Guesser, displayer: &Displayer) {
+fn gameloop(range: Range, guesser: &Guesser, displayer: &mut Displayer) {
     let mut msg = Message::GenerateAnswer(range);
     loop {
         msg = match msg {
