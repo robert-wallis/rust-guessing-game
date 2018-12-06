@@ -3,10 +3,8 @@
 
 extern crate rand;
 
-mod stdio;
-use stdio::StdIoGuesser;
 mod guesser;
-use guesser::{Displayer, GuessResult, Guesser};
+use guesser::{Displayer, GuessResult, Guesser, stdio::StdIoGuesser};
 mod range;
 use range::Range;
 mod stats;

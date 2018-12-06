@@ -1,5 +1,7 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
+pub mod stdio;
+
 use range::Range;
 use stats::Stats;
 use std::convert::From;
