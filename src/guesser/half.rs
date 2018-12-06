@@ -8,7 +8,6 @@ pub struct HalfGuesser;
 impl guesser::Guesser for HalfGuesser {
     fn guess(&self, range: &Range) -> Result<i32, AskGuessError> {
         let guess = range.min + (range.max - range.min) / 2;
-        println!("Guessing halfway between {} and {} @ {}", range.min, range.max, guess);
         Ok(guess)
     }
 }

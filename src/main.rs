@@ -4,7 +4,9 @@
 extern crate rand;
 
 mod guesser;
-use guesser::{Displayer, GuessResult, Guesser, stdio::StdIoGuesser, half::HalfGuesser};
+use guesser::{GuessResult, Guesser, io::IOGuesser, half::HalfGuesser};
+mod displayer;
+use displayer::{Displayer, io::IODisplayer};
 mod range;
 use range::Range;
 mod stats;
@@ -39,12 +41,18 @@ enum Message {
 fn main() {
     println!("==== Guessing Game ====");
 
-    let mut msg = Message::GenerateAnswer(Range { min: 1, max: 100 });
-    let stdio = StdIoGuesser;
+    let _io_guesser = IOGuesser;
+    let io_displayer = IODisplayer;
     let half = HalfGuesser;
-    let guesser: &Guesser = &half; // &stdio;
-    let displayer: &Displayer = &stdio;
 
+    //gameloop(Range { min: 1, max: 100 }, &half, &io_displayer);
+    gameloop(Range { min: 1, max: 100 }, &half, &io_displayer);
+
+    println!("End Game");
+}
+
+fn gameloop(range: Range, guesser: &Guesser, displayer: &Displayer) {
+    let mut msg = Message::GenerateAnswer(range);
     loop {
         msg = match msg {
             Message::GenerateAnswer(range) => Message::AskForGuess {
@@ -133,5 +141,4 @@ fn main() {
             }
         }
     }
-    println!("End Game");
 }

@@ -1,31 +1,24 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
-pub mod stdio;
+pub mod io;
 pub mod half;
 
 use range::Range;
-use stats::Stats;
+use std;
 use std::convert::From;
 use std::fmt;
-use std::io;
 
 pub trait Guesser {
     fn guess(&self, range: &Range) -> Result<i32, AskGuessError>;
 }
 
-pub trait Displayer {
-    fn display_guess_error(&self, err: &AskGuessError);
-    fn display_guess_result(&self, result: &GuessResult);
-    fn display_stats(&self, stats: &Stats);
-}
-
 pub enum AskGuessError {
-    IOError(io::Error),
+    IOError(std::io::Error),
     NotANumber,
 }
 
-impl From<io::Error> for AskGuessError {
-    fn from(err: io::Error) -> AskGuessError {
+impl From<std::io::Error> for AskGuessError {
+    fn from(err: std::io::Error) -> AskGuessError {
         AskGuessError::IOError(err)
     }
 }
