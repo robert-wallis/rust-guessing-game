@@ -137,7 +137,11 @@ fn message_pump(
                         result: GuessResult::TooLow(guess),
                         answer,
                         range: Range {
-                            min: if range.min < guess + 1 { guess + 1 } else { range.min },
+                            min: if range.min < guess + 1 {
+                                guess + 1
+                            } else {
+                                range.min
+                            },
                             ..range
                         },
                         stats,
@@ -146,7 +150,11 @@ fn message_pump(
                         result: GuessResult::TooHigh(guess),
                         answer,
                         range: Range {
-                            max: if range.max > guess - 1 { guess - 1 } else { range.max },
+                            max: if range.max > guess - 1 {
+                                guess - 1
+                            } else {
+                                range.max
+                            },
                             ..range
                         },
                         stats,
@@ -171,11 +179,23 @@ fn message_pump(
                 displayer.display_guess_result(&result);
                 match result {
                     GuessResult::Correct(_) => Message::ShowStats { stats },
-                    _ => Message::AskForGuess {
-                        answer,
-                        range,
-                        stats,
-                    },
+                    _ => {
+                        if range.min == range.max {
+                            // if there's only one possiblity, then enter it for them
+                            Message::CheckGuess {
+                                guess: range.min,
+                                answer,
+                                range,
+                                stats,
+                            }
+                        } else {
+                            Message::AskForGuess {
+                                answer,
+                                range,
+                                stats,
+                            }
+                        }
+                    }
                 }
             }
             Message::ShowStats { stats } => {
