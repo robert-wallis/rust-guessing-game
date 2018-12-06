@@ -1,6 +1,6 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
-use guesser::{AskGuessError, Displayer, GuessResult, Guesser};
+use guesser::{self, AskGuessError, Displayer, GuessResult};
 use range::Range;
 use stats::Stats;
 use std::io;
@@ -8,7 +8,7 @@ use std::io::Write;
 
 pub struct StdIoGuesser;
 
-impl Guesser for StdIoGuesser {
+impl guesser::Guesser for StdIoGuesser {
     fn guess(&self, range: &Range) -> Result<i32, AskGuessError> {
         print!("Guess a number between {}, and {}: ", range.min, range.max);
         io::stdout().flush()?;

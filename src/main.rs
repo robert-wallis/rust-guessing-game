@@ -4,7 +4,7 @@
 extern crate rand;
 
 mod guesser;
-use guesser::{Displayer, GuessResult, Guesser, stdio::StdIoGuesser};
+use guesser::{Displayer, GuessResult, Guesser, stdio::StdIoGuesser, half::HalfGuesser};
 mod range;
 use range::Range;
 mod stats;
@@ -41,7 +41,8 @@ fn main() {
 
     let mut msg = Message::GenerateAnswer(Range { min: 1, max: 100 });
     let stdio = StdIoGuesser;
-    let guesser: &Guesser = &stdio;
+    let half = HalfGuesser;
+    let guesser: &Guesser = &half; // &stdio;
     let displayer: &Displayer = &stdio;
 
     loop {

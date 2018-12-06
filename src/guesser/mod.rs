@@ -1,6 +1,7 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
 pub mod stdio;
+pub mod half;
 
 use range::Range;
 use stats::Stats;
