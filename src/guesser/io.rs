@@ -8,7 +8,7 @@ use std::io::Write;
 pub struct IOGuesser;
 
 impl guesser::Guesser for IOGuesser {
-    fn guess(&self, range: &Range) -> Result<i32, AskGuessError> {
+    fn guess(&mut self, range: &Range) -> Result<i32, AskGuessError> {
         print!("Guess a number between {}, and {}: ", range.min, range.max);
         io::stdout().flush()?;
 

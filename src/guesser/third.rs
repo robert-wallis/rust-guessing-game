@@ -3,11 +3,11 @@
 use guesser::{self, AskGuessError};
 use range::Range;
 
-pub struct HalfGuesser;
+pub struct ThirdGuesser;
 
-impl guesser::Guesser for HalfGuesser {
+impl guesser::Guesser for ThirdGuesser {
     fn guess(&mut self, range: &Range) -> Result<i32, AskGuessError> {
-        let guess = range.min + (range.max - range.min) / 2;
+        let guess = range.min + (range.max - range.min) / 3;
         Ok(guess)
     }
 }

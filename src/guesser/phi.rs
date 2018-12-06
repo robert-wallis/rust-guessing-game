@@ -3,11 +3,13 @@
 use guesser::{self, AskGuessError};
 use range::Range;
 
-pub struct HalfGuesser;
+const PHI : f32 = 0.618_034;
 
-impl guesser::Guesser for HalfGuesser {
+pub struct PhiGuesser;
+
+impl guesser::Guesser for PhiGuesser {
     fn guess(&mut self, range: &Range) -> Result<i32, AskGuessError> {
-        let guess = range.min + (range.max - range.min) / 2;
-        Ok(guess)
+        let guess = range.min as f32 + (range.max - range.min) as f32 * PHI;
+        Ok(guess as i32)
     }
 }

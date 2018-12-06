@@ -4,7 +4,7 @@
 extern crate rand;
 
 mod guesser;
-use guesser::{ GuessResult, Guesser, io::IOGuesser, half::HalfGuesser };
+use guesser::{ GuessResult, Guesser, io::IOGuesser, half::HalfGuesser, third::ThirdGuesser, phi::PhiGuesser, random::RandomGuesser };
 mod displayer;
 use displayer::{ Displayer, io::IODisplayer, aggregator::Aggregator };
 mod range;
@@ -41,21 +41,27 @@ enum Message {
 fn main() {
     println!("==== Guessing Game ====");
 
-    let _io_guesser = IOGuesser;
-    let mut _io_displayer = IODisplayer;
-    let mut aggregator = Aggregator::new();
-    let half = HalfGuesser;
+    test_guesser("Half", &mut HalfGuesser);
+    test_guesser("Third", &mut ThirdGuesser);
+    test_guesser("Phi", &mut PhiGuesser);
+    test_guesser("Random", &mut RandomGuesser::new());
 
-    //gameloop(Range { min: 1, max: 100 }, &half, &mut io_displayer);
-    for _ in 0..1_000_000 {
-        gameloop(Range { min: 1, max: 100 }, &half, &mut aggregator);
-    }
+    println!("\nTesting Human");
+    gameloop(Range { min: 1, max: 100 }, &mut IOGuesser, &mut IODisplayer);
 
-    println!("min turns: {}\nmax turns: {}\naverage turns: {}\ngames played: {}", aggregator.least_turns, aggregator.most_turns, aggregator.average_turns, aggregator.games_played);
-    println!("End Game");
+    println!("\nEnd Game");
 }
 
-fn gameloop(range: Range, guesser: &Guesser, displayer: &mut Displayer) {
+fn test_guesser(name: &str, guesser: &mut Guesser) {
+    let mut aggregator = Aggregator::new();
+    println!("\nTesting {} Guesser", name);
+    for _ in 0..1_000_000 {
+        gameloop(Range { min: 1, max: 100 }, guesser, &mut aggregator);
+    }
+    println!("min turns: {}\nmax turns: {}\naverage turns: {}\ngames played: {}", aggregator.least_turns, aggregator.most_turns, aggregator.average_turns, aggregator.games_played);
+}
+
+fn gameloop(range: Range, guesser: &mut Guesser, displayer: &mut Displayer) {
     let mut msg = Message::GenerateAnswer(range);
     loop {
         msg = match msg {

@@ -2,6 +2,9 @@
 
 pub mod io;
 pub mod half;
+pub mod third;
+pub mod phi;
+pub mod random;
 
 use range::Range;
 use std;
@@ -9,7 +12,7 @@ use std::convert::From;
 use std::fmt;
 
 pub trait Guesser {
-    fn guess(&self, range: &Range) -> Result<i32, AskGuessError>;
+    fn guess(&mut self, range: &Range) -> Result<i32, AskGuessError>;
 }
 
 pub enum AskGuessError {
