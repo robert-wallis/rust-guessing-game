@@ -1,10 +1,11 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
-pub mod io;
+pub mod cheat;
 pub mod half;
-pub mod third;
+pub mod io;
 pub mod phi;
 pub mod random;
+pub mod third;
 
 use range::Range;
 use std;

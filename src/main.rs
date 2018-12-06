@@ -4,13 +4,18 @@
 extern crate rand;
 
 mod guesser;
-use guesser::{ GuessResult, Guesser, io::IOGuesser, half::HalfGuesser, third::ThirdGuesser, phi::PhiGuesser, random::RandomGuesser };
+use guesser::{
+    cheat::CheatGuesser, half::HalfGuesser, io::IOGuesser, phi::PhiGuesser, random::RandomGuesser,
+    third::ThirdGuesser, GuessResult, Guesser,
+};
 mod displayer;
-use displayer::{ Displayer, io::IODisplayer, aggregator::Aggregator };
+use displayer::{aggregator::Aggregator, io::IODisplayer, Displayer};
 mod range;
 use range::Range;
 mod stats;
 use stats::Stats;
+mod randy;
+use randy::{Deterministic, RandomGenerator, Randy};
 
 use std::cmp::Ordering;
 
@@ -45,28 +50,53 @@ fn main() {
     test_guesser("Third", &mut ThirdGuesser);
     test_guesser("Phi", &mut PhiGuesser);
     test_guesser("Random", &mut RandomGuesser::new());
+    test_guesser("Cheat", &mut CheatGuesser::new());
 
     println!("\nTesting Human");
-    gameloop(Range { min: 1, max: 100 }, &mut IOGuesser, &mut IODisplayer);
+    let mut random = Randy::new();
+    message_pump(
+        Range { min: 1, max: 100 },
+        &mut IOGuesser,
+        &mut IODisplayer,
+        &mut random,
+    );
 
     println!("\nEnd Game");
 }
 
 fn test_guesser(name: &str, guesser: &mut Guesser) {
     let mut aggregator = Aggregator::new();
+    let seed: &[_] = &[1, 2, 3, 4];
+    let mut random = Deterministic::new(seed);
     println!("\nTesting {} Guesser", name);
     for _ in 0..1_000_000 {
-        gameloop(Range { min: 1, max: 100 }, guesser, &mut aggregator);
+        message_pump(
+            Range { min: 1, max: 100 },
+            guesser,
+            &mut aggregator,
+            &mut random,
+        );
     }
-    println!("min turns: {}\nmax turns: {}\naverage turns: {}\ngames played: {}", aggregator.least_turns, aggregator.most_turns, aggregator.average_turns, aggregator.games_played);
+    println!(
+        "min turns: {}\nmax turns: {}\naverage turns: {}\ngames played: {}",
+        aggregator.least_turns,
+        aggregator.most_turns,
+        aggregator.average_turns,
+        aggregator.games_played
+    );
 }
 
-fn gameloop(range: Range, guesser: &mut Guesser, displayer: &mut Displayer) {
+fn message_pump(
+    range: Range,
+    guesser: &mut Guesser,
+    displayer: &mut Displayer,
+    random: &mut RandomGenerator,
+) {
     let mut msg = Message::GenerateAnswer(range);
     loop {
         msg = match msg {
             Message::GenerateAnswer(range) => Message::AskForGuess {
-                answer: range.random(),
+                answer: random.random(&range),
                 range,
                 stats: Stats { turns: 0 },
             },
