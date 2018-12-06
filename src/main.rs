@@ -137,7 +137,7 @@ fn message_pump(
                         result: GuessResult::TooLow(guess),
                         answer,
                         range: Range {
-                            min: guess + 1,
+                            min: if range.min < guess + 1 { guess + 1 } else { range.min },
                             ..range
                         },
                         stats,
@@ -146,7 +146,7 @@ fn message_pump(
                         result: GuessResult::TooHigh(guess),
                         answer,
                         range: Range {
-                            max: guess - 1,
+                            max: if range.max > guess - 1 { guess - 1 } else { range.max },
                             ..range
                         },
                         stats,
