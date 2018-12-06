@@ -3,7 +3,7 @@
 use guesser::{self, AskGuessError};
 use range::Range;
 
-const PHI : f32 = 0.618_034;
+const PHI: f32 = 0.618_034;
 
 pub struct PhiGuesser;
 

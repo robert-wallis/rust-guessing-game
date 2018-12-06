@@ -1,11 +1,11 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
 use guesser::{self, AskGuessError};
+use rand::{Rng, ThreadRng};
 use range::Range;
-use rand::{ Rng, ThreadRng };
 
 pub struct RandomGuesser {
-    random: ThreadRng
+    random: ThreadRng,
 }
 
 impl RandomGuesser {

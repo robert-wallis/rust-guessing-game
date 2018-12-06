@@ -1,10 +1,10 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
-pub mod io;
 pub mod aggregator;
+pub mod io;
 
-use stats::Stats;
 use guesser::{AskGuessError, GuessResult};
+use stats::Stats;
 
 pub trait Displayer {
     fn display_guess_error(&self, err: &AskGuessError);

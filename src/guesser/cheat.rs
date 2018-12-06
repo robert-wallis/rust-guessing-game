@@ -1,11 +1,11 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
 use guesser::{self, AskGuessError};
+use rand::{Rng, SeedableRng, StdRng};
 use range::Range;
-use rand::{ Rng, StdRng, SeedableRng };
 
 pub struct CheatGuesser {
-    random: StdRng
+    random: StdRng,
 }
 
 impl CheatGuesser {

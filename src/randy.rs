@@ -1,6 +1,6 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
-use rand::{Rng, StdRng, SeedableRng, ThreadRng};
+use rand::{Rng, SeedableRng, StdRng, ThreadRng};
 use range::Range;
 
 pub trait RandomGenerator {
