@@ -46,20 +46,12 @@ enum Message {
 fn main() {
     println!("==== Guessing Game ====");
 
+    test_human();
     test_guesser("Half", &mut HalfGuesser);
     test_guesser("Third", &mut ThirdGuesser);
     test_guesser("Phi", &mut PhiGuesser);
     test_guesser("Random", &mut RandomGuesser::new());
     test_guesser("Cheat", &mut CheatGuesser::new());
-
-    println!("\nTesting Human");
-    let mut random = Randy::new();
-    message_pump(
-        Range { min: 1, max: 100 },
-        &mut IOGuesser,
-        &mut IODisplayer,
-        &mut random,
-    );
 
     println!("\nEnd Game");
 }
@@ -83,6 +75,17 @@ fn test_guesser(name: &str, guesser: &mut Guesser) {
         aggregator.most_turns,
         aggregator.average_turns,
         aggregator.games_played
+    );
+}
+
+fn test_human() {
+    println!("\nTesting Human");
+    let mut random = Randy::new();
+    message_pump(
+        Range { min: 1, max: 100 },
+        &mut IOGuesser,
+        &mut IODisplayer,
+        &mut random,
     );
 }
 
