@@ -1,6 +1,6 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
-use rand::{Rng, SeedableRng, StdRng, ThreadRng};
+use rand::{Rng, SeedableRng, prelude::StdRng, prelude::ThreadRng};
 use range::Range;
 
 pub trait RandomGenerator {
@@ -13,10 +13,9 @@ pub struct Deterministic {
 }
 
 impl Deterministic {
-    /// seed example: `let seed &[_] = &[1, 2, 3, 4];`
-    pub fn new(seed: &[usize]) -> Deterministic {
+    pub fn new(seed: u64) -> Deterministic {
         Deterministic {
-            random: SeedableRng::from_seed(seed),
+            random: SeedableRng::seed_from_u64(seed),
         }
     }
 }

@@ -1,7 +1,7 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
 use guesser::{self, AskGuessError};
-use rand::{Rng, SeedableRng, StdRng};
+use rand::{Rng, prelude::SeedableRng, prelude::StdRng};
 use range::Range;
 
 pub struct CheatGuesser {
@@ -10,9 +10,8 @@ pub struct CheatGuesser {
 
 impl CheatGuesser {
     pub fn new() -> CheatGuesser {
-        let seed: &[_] = &[1, 2, 3, 4];
         CheatGuesser {
-            random: SeedableRng::from_seed(seed),
+            random: SeedableRng::seed_from_u64(0x0u64),
         }
     }
 

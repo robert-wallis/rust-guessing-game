@@ -50,16 +50,15 @@ fn main() {
     test_guesser("Half", &mut HalfGuesser);
     test_guesser("Third", &mut ThirdGuesser);
     test_guesser("Phi", &mut PhiGuesser);
-    test_guesser("Random", &mut RandomGuesser::new());
     test_guesser("Cheat", &mut CheatGuesser::new());
+    test_guesser("Random", &mut RandomGuesser::new());
 
     println!("\nEnd Game");
 }
 
 fn test_guesser(name: &str, guesser: &mut Guesser) {
     let mut aggregator = Aggregator::new();
-    let seed: &[_] = &[1, 2, 3, 4];
-    let mut random = Deterministic::new(seed);
+    let mut random = Deterministic::new(0x0u64);
     println!("\nTesting {} Guesser", name);
     for _ in 0..1_000_000 {
         message_pump(

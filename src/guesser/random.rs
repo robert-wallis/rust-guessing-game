@@ -1,7 +1,7 @@
 // Copyright (C) 2018 Robert A. Wallis, All Rights Reserved
 
 use guesser::{self, AskGuessError};
-use rand::{Rng, ThreadRng};
+use rand::{Rng, prelude::ThreadRng};
 use range::Range;
 
 pub struct RandomGuesser {
